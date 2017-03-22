@@ -1,0 +1,75 @@
+﻿@model www.Models.ReadModel
+@{
+    Layout = "~/Views/Shared/_LayoutSub.cshtml";
+}
+@using (Html.BeginForm("Write", "Board", FormMethod.Post, new { @id = "frm", @class = "form -horizontal"}))
+{
+    <fieldset>
+        <legend>글쓰기</legend>
+        <div class="form-group">
+            <div class="col-lg-12">
+                <label class="control-label" for="focusedInput">제목</label>
+                <input class="form-control" name="subject" type="text" value="@Model.board.subject">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-12">
+                <label class="control-label" for="focusedInput">Tag</label>
+                <input class="form-control" name="tag" type="text">
+            </div>
+        </div>
+        <div class="form-group">            
+            <div class="col-lg-12">
+                <label class="control-label" for="inputWarning">내용</label>
+                <textarea name="editor" id="editor" style="width:100%;">@Model.board.contents</textarea>
+            </div>
+        </div>                
+        <div class="form-group" style="line-height:45px;">
+            <div class="col-lg-12" style="vertical-align: middle;text-align:right;">
+                <button type="reset" class="btn btn-sm btn-default" id="btnCancel">취소</button>
+                <button type="button" class="btn btn-sm btn-primary" id="btnSave">저장</button>
+            </div>
+        </div>
+    </fieldset>
+
+    @Html.Hidden("contents")
+    @Html.Hidden("board_seq", Model.board.board_seq)
+    @Html.Hidden("board_type", (object)ViewBag.board_type)
+    @Html.Hidden("board_type_code", (object)ViewBag.board_type_code)
+
+}
+
+@section scripts{
+
+    @Scripts.Render("http://static.justsoo.net/js/plugin/nicEdit/nicEdit.js")
+
+    <script type="text/javascript">
+
+        var $wHeight = $(window).height() - 430;
+        $("#editor").height($wHeight);
+
+        var editor;
+        editor = new nicEditor({ fullPanel: true }).panelInstance('editor', { hasPanel: true });
+
+        $(window).on('resize', function () {
+            var $wHeight = $(window).height() - 430;
+            $("#editor").height($wHeight);
+            editor.removeInstance('editor');
+            editor = new nicEditor({ fullPanel: true }).panelInstance('editor', { hasPanel: true });
+        });
+
+        nicEditors.findEditor('editor').cont
+
+        $("#btnSave").click(function () {
+            $("#contents").val(nicEditors.findEditor('editor').getContent());
+            $("#frm").submit();
+        });
+
+        $("#btnCancel").click(function () {
+            var board_seq = $('#board_seq').val();
+            var board_type = $('#board_type').val();
+            var board_type_code = $('#board_type_code').val();
+            window.location.replace("/board/read/" + board_type + "/" + board_type_code + "/" + board_seq);
+        });
+    </script>
+}

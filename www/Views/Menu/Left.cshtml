@@ -1,0 +1,16 @@
+﻿@model List<www.Models.Entities.CodeEntity>
+@{
+    ViewBag.Title = "Left";
+}
+
+<div class="col-sm-2">
+    @foreach (var item in Model)
+    {
+        <a href="/board/read/@ViewBag.board_type/@item.code" class="list-group-item @(ViewBag.board_type_code == item.code ? "active" : "")">
+            @item.value
+        </a>
+    }
+    <div class="text-center" style="line-height:45px;">
+        <a href="/board/write/@ViewBag.board_type/@ViewBag.board_type_code" class="btn btn-sm btn-success"  style="vertical-align: middle">글쓰기</a>
+    </div>
+</div>
